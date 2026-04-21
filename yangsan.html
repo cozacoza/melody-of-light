@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>양산을 쓴 여인 - 빛의 선율</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.2/dist/mindar-image-aframe.prod.js"></script>
+</head>
+<body class="ar-page">
+
+  <!-- AR 씬 -->
+  <a-scene
+    mindar-image="imageTargetSrc: assets/images/yangsan.mind; autoStart: true;"
+    color-space="sRGB"
+    renderer="colorManagement: true"
+    vr-mode-ui="enabled: false"
+    device-orientation-permission-ui="enabled: false">
+
+    <a-assets>
+      <a-asset-item id="flute-model" src="assets/models/flute.glb"></a-asset-item>
+    </a-assets>
+
+    <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+
+    <a-entity mindar-image-target="targetIndex: 0">
+      <!-- 3D 플루트 -->
+      <a-gltf-model
+        id="flute"
+        src="#flute-model"
+        position="0 0 0.1"
+        scale="0.15 0.15 0.15"
+        rotation="0 0 0"
+        animation="property: rotation; to: 0 360 0; loop: true; dur: 8000; easing: linear">
+      </a-gltf-model>
+
+      <!-- 빛 파티클 효과 -->
+      <a-entity
+        id="particles"
+        position="0 0 0.1"
+        visible="false">
+        <a-sphere
+          position="0 0.3 0" scale="0.02 0.02 0.02"
+          color="#f8e8c8" opacity="0.8"
+          animation="property: position; to: 0.2 0.6 0; dur: 1500; loop: true; easing: easeOutQuad">
+        </a-sphere>
+        <a-sphere
+          position="-0.2 0.1 0" scale="0.015 0.015 0.015"
+          color="#fdf0d8" opacity="0.6"
+          animation="property: position; to: -0.3 0.5 0; dur: 2000; loop: true; easing: easeOutQuad">
+        </a-sphere>
+        <a-sphere
+          position="0.15 0.2 0" scale="0.018 0.018 0.018"
+          color="#fff8e8" opacity="0.7"
+          animation="property: position; to: 0.1 0.7 0; dur: 1800; loop: true; easing: easeOutQuad">
+        </a-sphere>
+      </a-entity>
+    </a-entity>
+
+  </a-scene>
+
+  <!-- 오버레이 UI -->
+  <div class="ar-overlay" id="overlay">
+
+    <!-- 상단 수집 현황 -->
+    <div class="ar-top-bar">
+      <a href="index.html" class="back-btn">←</a>
+      <div class="collect-status">
+        <span class="collect-dot" id="dot-harp">○</span>
+        <span class="collect-dot" id="dot-flute">○</span>
+      </div>
+    </div>
+
+    <!-- 작품 정보 -->
+    <div class="artwork-info">
+      <p class="artwork-tag">Claude Monet · 1875</p>
+      <h2 class="artwork-title">양산을 쓴 여인</h2>
+      <p class="artwork-hint">화면 속 플루트를 터치하세요</p>
+    </div>
+
+    <!-- 수집 완료 팝업 -->
+    <div class="collect-popup" id="collectPopup">
+      <div class="popup-inner">
+        <div class="popup-icon">𝄞</div>
+        <p class="popup-title">플루트를 수집했습니다!</p>
+        <p class="popup-desc">바람에 흩날리는 빛이<br>플루트의 숨결로 깨어났습니다</p>
+        <div class="popup-buttons">
+          <a href="finale.html" class="popup-btn primary">피날레로 → </a>
+          <a href="index.html" class="popup-btn secondary">메인으로</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    // 수집 상태 불러오기
+    const collected = JSON.parse(localStorage.getItem('collected') || '{}');
+    if (collected.harp) {
+      document.getElementById('dot-harp').textContent = '●';
+      document.getElementById('dot-harp').style.color = '#a8d8ea';
+    }
+    if (collected.flute) {
+      document.getElementById('dot-flute').textContent = '●';
+      document.getElementById('dot-flute').style.color = '#f8e8c8';
+    }
+
+    // 플루트 터치 이벤트
+    const flute = document.getElementById('flute');
+    const particles = document.getElementById('particles');
+    const popup = document.getElementById('collectPopup');
+
+    flute.addEventListener('click', () => {
+      if (collected.flute) return;
+
+      // 파티클 효과 표시
+      particles.setAttribute('visible', 'true');
+
+      // 수집 저장
+      collected.flute = true;
+      localStorage.setItem('collected', JSON.stringify(collected));
+
+      // 점 업데이트
+      document.getElementById('dot-flute').textContent = '●';
+      document.getElementById('dot-flute').style.color = '#f8e8c8';
+
+      // 오디오 재생
+      const audio = new Audio('assets/audio/flute.mp3');
+      audio.volume = 0.8;
+      audio.play();
+
+      // 팝업 표시
+      setTimeout(() => {
+        popup.classList.add('show');
+      }, 800);
+    });
+  </script>
+
+</body>
+</html>

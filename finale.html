@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>피날레 - 빛의 선율</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="finale-page">
+
+  <div class="finale-container">
+
+    <!-- 상단 -->
+    <div class="finale-header">
+      <p class="tag">Finale</p>
+      <h1 class="finale-title">빛의 선율이<br>완성되었습니다</h1>
+      <p class="finale-subtitle">Clair de lune · Claude Debussy</p>
+    </div>
+
+    <!-- 악기 수집 결과 -->
+    <div class="finale-instruments">
+      <div class="finale-slot" id="slot-harp">
+        <div class="finale-icon">𝄞</div>
+        <p class="finale-name">하프</p>
+        <p class="finale-work">수련</p>
+      </div>
+      <div class="finale-plus">+</div>
+      <div class="finale-slot" id="slot-flute">
+        <div class="finale-icon">𝄞</div>
+        <p class="finale-name">플루트</p>
+        <p class="finale-work">양산을 쓴 여인</p>
+      </div>
+    </div>
+
+    <!-- 음악 플레이어 -->
+    <div class="music-player">
+      <div class="player-visual" id="playerVisual">
+        <div class="wave-bar"></div>
+        <div class="wave-bar"></div>
+        <div class="wave-bar"></div>
+        <div class="wave-bar"></div>
+        <div class="wave-bar"></div>
+        <div class="wave-bar"></div>
+        <div class="wave-bar"></div>
+      </div>
+      <p class="player-title">오케스트라 합주</p>
+      <button class="play-btn" id="playBtn" onclick="toggleMusic()">
+        ▶ 연주 시작
+      </button>
+    </div>
+
+    <!-- 인증샷 버튼 -->
+    <div class="share-section">
+      <p class="share-desc">나만의 오케스트라를 완성했습니다<br>소감을 공유해보세요</p>
+      <button class="share-btn" onclick="takeScreenshot()">
+        📷 인증샷 저장
+      </button>
+    </div>
+
+    <!-- 다시하기 -->
+    <a href="index.html" class="restart-btn" onclick="resetCollection()">
+      ↺ 처음부터 다시하기
+    </a>
+
+  </div>
+
+  <script>
+    // 수집 상태 확인
+    const collected = JSON.parse(localStorage.getItem('collected') || '{}');
+
+    // 수집된 악기 표시
+    if (collected.harp) {
+      document.getElementById('slot-harp').classList.add('collected');
+    }
+    if (collected.flute) {
+      document.getElementById('slot-flute').classList.add('collected');
+    }
+
+    // 오디오 설정
+    const harpAudio = new Audio('assets/audio/harp.mp3');
+    const fluteAudio = new Audio('assets/audio/flute.mp3');
+    harpAudio.loop = true;
+    fluteAudio.loop = true;
+    harpAudio.volume = 0;
+    fluteAudio.volume = 0;
+
+    let isPlaying = false;
+
+    // 볼륨 페이드인
+    function fadeIn(audio, targetVolume, duration) {
+      const steps = 30;
+      const stepTime = duration / steps;
+      const stepVolume = targetVolume / steps;
+      let current = 0;
+      const interval = setInterval(() => {
+        current++;
+        audio.volume = Math.min(stepVolume * current, targetVolume);
+        if (current >= steps) clearInterval(interval);
+      }, stepTime);
+    }
+
+    function toggleMusic() {
+      const btn = document.getElementById('playBtn');
+      const visual = document.getElementById('playerVisual');
+
+      if (!isPlaying) {
+        // 수집된 악기만 재생
+        if (collected.harp) {
+          harpAudio.play();
+          fadeIn(harpAudio, 0.7, 2000);
+        }
+        if (collected.flute) {
+          setTimeout(() => {
+            fluteAudio.play();
+            fadeIn(fluteAudio, 0.7, 2000);
+          }, collected.harp ? 1500 : 0);
+        }
+
+        isPlaying = true;
+        btn.textContent = '■ 연주 중지';
+        visual.classList.add('playing');
+
+      } else {
+        harpAudio.pause();
+        fluteAudio.pause();
+        harpAudio.currentTime = 0;
+        fluteAudio.currentTime = 0;
+        harpAudio.volume = 0;
+        fluteAudio.volume = 0;
+
+        isPlaying = false;
+        btn.textContent = '▶ 연주 시작';
+        visual.classList.remove('playing');
+      }
+    }
+
+    // 인증샷 저장
+    function takeScreenshot() {
+      html2canvas(document.body).then(canvas => {
+        const link = document.createElement('a');
+        link.download = '빛의선율_인증샷.png';
+        link.href = canvas.toDataURL();
+        link.click();
+      });
+    }
+
+    // 수집 초기화
+    function resetCollection() {
+      localStorage.removeItem('collected');
+    }
+
+    // 페이지 로드시 자동 연주 시작
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        toggleMusic();
+      }, 1000);
+    });
+  </script>
+
+  <!-- html2canvas 라이브러리 (인증샷용) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+</body>
+</html>
