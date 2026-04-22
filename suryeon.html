@@ -23,7 +23,7 @@
 
     <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
 
-    <a-entity mindar-image-target="targetIndex: 0">
+    <a-entity mindar-image-target="targetIndex: 0" id="target">
       <a-gltf-model
         id="harp"
         src="#harp-model"
@@ -42,25 +42,10 @@
           color="#c8e8f8" opacity="0.6"
           animation="property: position; to: 0.3 0.5 0; dur: 2000; loop: true; easing: easeOutQuad">
         </a-sphere>
-        <a-sphere position="-0.15 0.2 0" scale="0.018 0.018 0.018"
-          color="#e8f4fd" opacity="0.7"
-          animation="property: position; to: -0.1 0.7 0; dur: 1800; loop: true; easing: easeOutQuad">
-        </a-sphere>
       </a-entity>
     </a-entity>
 
   </a-scene>
-  <script>
-  const scene = document.querySelector('a-scene');
-  scene.addEventListener('loaded', () => {
-    const target = document.querySelector('[mindar-image-target]');
-    target.addEventListener('targetFound', () => {
-      setTimeout(() => {
-        collectInstrument();
-      }, 2000);
-    });
-  });
-</script>
 
   <div class="ar-overlay">
     <div class="ar-top-bar">
@@ -71,14 +56,10 @@
       </div>
     </div>
 
-    <button class="collect-trigger" id="collectBtn" onclick="collectInstrument()">
-      ✦ 터치하여 수집
-    </button>
-
     <div class="artwork-info">
       <p class="artwork-tag">Claude Monet · 1906</p>
       <h2 class="artwork-title">수련</h2>
-      <p class="artwork-hint">화면 속 하프를 터치하세요</p>
+      <p class="artwork-hint" id="hint">그림에 카메라를 갖다대세요</p>
     </div>
 
     <div class="collect-popup" id="collectPopup">
@@ -96,6 +77,7 @@
 
   <script>
     const collected = JSON.parse(localStorage.getItem('collected') || '{}');
+
     if (collected.harp) {
       document.getElementById('dot-harp').textContent = '●';
       document.getElementById('dot-harp').style.color = '#a8d8ea';
@@ -105,26 +87,33 @@
       document.getElementById('dot-flute').style.color = '#f8e8c8';
     }
 
-    // 이미 수집했으면 버튼 숨기기
-    if (collected.harp) {
-      document.getElementById('collectBtn').style.display = 'none';
-    }
+    let timer = null;
 
-    function collectInstrument() {
+    const target = document.getElementById('target');
+
+    target.addEventListener('targetFound', () => {
       if (collected.harp) return;
-      document.getElementById('particles').setAttribute('visible', 'true');
-      collected.harp = true;
-      localStorage.setItem('collected', JSON.stringify(collected));
-      document.getElementById('dot-harp').textContent = '●';
-      document.getElementById('dot-harp').style.color = '#a8d8ea';
-      document.getElementById('collectBtn').style.display = 'none';
-      const audio = new Audio('assets/audio/harp.mp3');
-      audio.volume = 0.8;
-      audio.play();
-      setTimeout(() => {
+      document.getElementById('hint').textContent = '하프가 깨어나고 있습니다...';
+      timer = setTimeout(() => {
+        document.getElementById('particles').setAttribute('visible', 'true');
+        collected.harp = true;
+        localStorage.setItem('collected', JSON.stringify(collected));
+        document.getElementById('dot-harp').textContent = '●';
+        document.getElementById('dot-harp').style.color = '#a8d8ea';
+        const audio = new Audio('assets/audio/harp.mp3');
+        audio.volume = 0.8;
+        audio.play();
         document.getElementById('collectPopup').classList.add('show');
-      }, 800);
-    }
+      }, 3000);
+    });
+
+    target.addEventListener('targetLost', () => {
+      if (timer) {
+        clearTimeout(timer);
+        timer = null;
+        document.getElementById('hint').textContent = '그림에 카메라를 갖다대세요';
+      }
+    });
   </script>
 
 </body>
