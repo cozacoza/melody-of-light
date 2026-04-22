@@ -77,62 +77,28 @@
     }
 
     // 오디오 설정
-    const harpAudio = new Audio('assets/audio/harp.mp3');
-    const fluteAudio = new Audio('assets/audio/flute.mp3');
-    harpAudio.loop = true;
-    fluteAudio.loop = true;
-    harpAudio.volume = 0;
-    fluteAudio.volume = 0;
+const finaleAudio = new Audio('assets/audio/finale.mp3');
+finaleAudio.loop = true;
 
-    let isPlaying = false;
+let isPlaying = false;
 
-    // 볼륨 페이드인
-    function fadeIn(audio, targetVolume, duration) {
-      const steps = 30;
-      const stepTime = duration / steps;
-      const stepVolume = targetVolume / steps;
-      let current = 0;
-      const interval = setInterval(() => {
-        current++;
-        audio.volume = Math.min(stepVolume * current, targetVolume);
-        if (current >= steps) clearInterval(interval);
-      }, stepTime);
-    }
+function toggleMusic() {
+  const btn = document.getElementById('playBtn');
+  const visual = document.getElementById('playerVisual');
 
-    function toggleMusic() {
-      const btn = document.getElementById('playBtn');
-      const visual = document.getElementById('playerVisual');
-
-      if (!isPlaying) {
-        // 수집된 악기만 재생
-        if (collected.harp) {
-          harpAudio.play();
-          fadeIn(harpAudio, 0.7, 2000);
-        }
-        if (collected.flute) {
-          setTimeout(() => {
-            fluteAudio.play();
-            fadeIn(fluteAudio, 0.7, 2000);
-          }, collected.harp ? 1500 : 0);
-        }
-
-        isPlaying = true;
-        btn.textContent = '■ 연주 중지';
-        visual.classList.add('playing');
-
-      } else {
-        harpAudio.pause();
-        fluteAudio.pause();
-        harpAudio.currentTime = 0;
-        fluteAudio.currentTime = 0;
-        harpAudio.volume = 0;
-        fluteAudio.volume = 0;
-
-        isPlaying = false;
-        btn.textContent = '▶ 연주 시작';
-        visual.classList.remove('playing');
-      }
-    }
+  if (!isPlaying) {
+    finaleAudio.play();
+    isPlaying = true;
+    btn.textContent = '■ 연주 중지';
+    visual.classList.add('playing');
+  } else {
+    finaleAudio.pause();
+    finaleAudio.currentTime = 0;
+    isPlaying = false;
+    btn.textContent = '▶ 연주 시작';
+    visual.classList.remove('playing');
+  }
+}
 
     // 인증샷 저장
     function takeScreenshot() {
