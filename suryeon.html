@@ -22,7 +22,12 @@
       <a-asset-item id="harp-model" src="assets/models/harp.glb"></a-asset-item>
     </a-assets>
 
-    <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+    <a-camera position="0 0 0" look-controls="enabled: false">
+  <a-cursor
+    fuse="false"
+    raycaster="objects: [gltf-model]">
+  </a-cursor>
+</a-camera>
 
     <a-entity mindar-image-target="targetIndex: 0">
       <!-- 3D 하프 -->
