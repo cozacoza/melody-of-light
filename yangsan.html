@@ -76,44 +76,52 @@
   </div>
 
   <script>
-    const collected = JSON.parse(localStorage.getItem('collected') || '{}');
+   const collected = JSON.parse(localStorage.getItem('collected') || '{}');
 
-    if (collected.harp) {
-      document.getElementById('dot-harp').textContent = '●';
-      document.getElementById('dot-harp').style.color = '#a8d8ea';
-    }
-    if (collected.flute) {
+if (collected.harp) {
+  document.getElementById('dot-harp').textContent = '●';
+  document.getElementById('dot-harp').style.color = '#a8d8ea';
+}
+if (collected.flute) {
+  document.getElementById('dot-flute').textContent = '●';
+  document.getElementById('dot-flute').style.color = '#f8e8c8';
+}
+
+let timer = null;
+let triggered = false;
+
+const sceneEl = document.querySelector('a-scene');
+sceneEl.addEventListener('loaded', () => {
+  const target = sceneEl.querySelector('[mindar-image-target]');
+  target.addEventListener('targetFound', () => {
+    if (triggered) return;
+    document.getElementById('hint').textContent = '플룻이 깨어나고 있습니다...';
+    timer = setTimeout(() => {
+      triggered = true;
+      document.getElementById('particles').setAttribute('visible', 'true');
+      collected.flute = true;
+      localStorage.setItem('collected', JSON.stringify(collected));
       document.getElementById('dot-flute').textContent = '●';
-      document.getElementById('dot-flute').style.color = '#f8e8c8';
-    }
-
-    let timer = null;
-
-    const target = document.getElementById('target');
-
-    target.addEventListener('targetFound', () => {
-      if (collected.flute) return;
-      document.getElementById('hint').textContent = '플루트가 깨어나고 있습니다...';
-      timer = setTimeout(() => {
-        document.getElementById('particles').setAttribute('visible', 'true');
-        collected.flute = true;
-        localStorage.setItem('collected', JSON.stringify(collected));
-        document.getElementById('dot-flute').textContent = '●';
-        document.getElementById('dot-flute').style.color = '#f8e8c8';
+      document.getElementById('dot-flute').style.color = '#a8d8ea';
+      try {
         const audio = new Audio('assets/audio/flute.mp3');
         audio.volume = 0.8;
         audio.play();
-        document.getElementById('collectPopup').classList.add('show');
-      }, 3000);
-    });
+      } catch(e) {}
+      document.getElementById('collectPopup').classList.add('show');
+    }, 3000);
+  });
 
-    target.addEventListener('targetLost', () => {
-      if (timer) {
-        clearTimeout(timer);
-        timer = null;
+  target.addEventListener('targetLost', () => {
+    if (timer) {
+      clearTimeout(timer);
+      timer = null;
+      if (!triggered) {
         document.getElementById('hint').textContent = '그림에 카메라를 갖다대세요';
       }
-    });
+    }
+  });
+});
   </script>
 
 </body>
