@@ -6,41 +6,10 @@
   <title>수련 - 빛의 선율</title>
   <link rel="stylesheet" href="css/style.css">
   <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
-
-  <script>
-  const collected = JSON.parse(localStorage.getItem('collected') || '{}');
-  if (collected.harp) {
-    document.getElementById('dot-harp').textContent = '●';
-    document.getElementById('dot-harp').style.color = '#a8d8ea';
-  }
-  if (collected.flute) {
-    document.getElementById('dot-flute').textContent = '●';
-    document.getElementById('dot-flute').style.color = '#f8e8c8';
-  }
-
-  const harp = document.getElementById('harp');
-  const particles = document.getElementById('particles');
-  const popup = document.getElementById('collectPopup');
-
-  harp.addEventListener('touchstart', () => {
-    if (collected.harp) return;
-    particles.setAttribute('visible', 'true');
-    collected.harp = true;
-    localStorage.setItem('collected', JSON.stringify(collected));
-    document.getElementById('dot-harp').textContent = '●';
-    document.getElementById('dot-harp').style.color = '#a8d8ea';
-    const audio = new Audio('assets/audio/harp.mp3');
-    audio.volume = 0.8;
-    audio.play();
-    setTimeout(() => {
-      popup.classList.add('show');
-    }, 800);
-  });
-</script>
+  <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.2/dist/mindar-image-aframe.prod.js"></script>
 </head>
 <body class="ar-page">
 
-  <!-- AR 씬 -->
   <a-scene
     mindar-image="imageTargetSrc: assets/images/suryeon.mind; autoStart: true;"
     color-space="sRGB"
@@ -53,14 +22,10 @@
     </a-assets>
 
     <a-camera position="0 0 0" look-controls="enabled: false">
-  <a-cursor
-    fuse="false"
-    raycaster="objects: [gltf-model]">
-  </a-cursor>
-</a-camera>
+      <a-cursor fuse="false" raycaster="objects: [gltf-model]"></a-cursor>
+    </a-camera>
 
     <a-entity mindar-image-target="targetIndex: 0">
-      <!-- 3D 하프 -->
       <a-gltf-model
         id="harp"
         src="#harp-model"
@@ -70,12 +35,82 @@
         animation="property: rotation; to: 0 360 0; loop: true; dur: 8000; easing: linear">
       </a-gltf-model>
 
-      <!-- 빛 파티클 효과 -->
-      <a-entity
-        id="particles"
-        position="0 0 0.1"
-        visible="false">
-        <a-sphere
-          position="0 0.3 0" scale="0.02 0.02 0.02"
+      <a-entity id="particles" position="0 0 0.1" visible="false">
+        <a-sphere position="0 0.3 0" scale="0.02 0.02 0.02"
           color="#a8d8ea" opacity="0.8"
-          animation="property: position; to: -0.2 0.6
+          animation="property: position; to: -0.2 0.6 0; dur: 1500; loop: true; easing: easeOutQuad">
+        </a-sphere>
+        <a-sphere position="0.2 0.1 0" scale="0.015 0.015 0.015"
+          color="#c8e8f8" opacity="0.6"
+          animation="property: position; to: 0.3 0.5 0; dur: 2000; loop: true; easing: easeOutQuad">
+        </a-sphere>
+        <a-sphere position="-0.15 0.2 0" scale="0.018 0.018 0.018"
+          color="#e8f4fd" opacity="0.7"
+          animation="property: position; to: -0.1 0.7 0; dur: 1800; loop: true; easing: easeOutQuad">
+        </a-sphere>
+      </a-entity>
+    </a-entity>
+
+  </a-scene>
+
+  <div class="ar-overlay" id="overlay">
+    <div class="ar-top-bar">
+      <a href="index.html" class="back-btn">←</a>
+      <div class="collect-status">
+        <span class="collect-dot" id="dot-harp">○</span>
+        <span class="collect-dot" id="dot-flute">○</span>
+      </div>
+    </div>
+
+    <div class="artwork-info">
+      <p class="artwork-tag">Claude Monet · 1906</p>
+      <h2 class="artwork-title">수련</h2>
+      <p class="artwork-hint">화면 속 하프를 터치하세요</p>
+    </div>
+
+    <div class="collect-popup" id="collectPopup">
+      <div class="popup-inner">
+        <div class="popup-icon">𝄞</div>
+        <p class="popup-title">하프를 수집했습니다!</p>
+        <p class="popup-desc">모네의 수면 위 빛이<br>하프의 선율로 깨어났습니다</p>
+        <div class="popup-buttons">
+          <a href="yangsan.html" class="popup-btn primary">다음 작품으로 →</a>
+          <a href="index.html" class="popup-btn secondary">메인으로</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const collected = JSON.parse(localStorage.getItem('collected') || '{}');
+    if (collected.harp) {
+      document.getElementById('dot-harp').textContent = '●';
+      document.getElementById('dot-harp').style.color = '#a8d8ea';
+    }
+    if (collected.flute) {
+      document.getElementById('dot-flute').textContent = '●';
+      document.getElementById('dot-flute').style.color = '#f8e8c8';
+    }
+
+    const harp = document.getElementById('harp');
+    const particles = document.getElementById('particles');
+    const popup = document.getElementById('collectPopup');
+
+    harp.addEventListener('touchstart', () => {
+      if (collected.harp) return;
+      particles.setAttribute('visible', 'true');
+      collected.harp = true;
+      localStorage.setItem('collected', JSON.stringify(collected));
+      document.getElementById('dot-harp').textContent = '●';
+      document.getElementById('dot-harp').style.color = '#a8d8ea';
+      const audio = new Audio('assets/audio/harp.mp3');
+      audio.volume = 0.8;
+      audio.play();
+      setTimeout(() => {
+        popup.classList.add('show');
+      }, 800);
+    });
+  </script>
+
+</body>
+</html>
