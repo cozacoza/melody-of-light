@@ -50,6 +50,17 @@
     </a-entity>
 
   </a-scene>
+  <script>
+  const scene = document.querySelector('a-scene');
+  scene.addEventListener('loaded', () => {
+    const target = document.querySelector('[mindar-image-target]');
+    target.addEventListener('targetFound', () => {
+      setTimeout(() => {
+        collectInstrument();
+      }, 2000);
+    });
+  });
+</script>
 
   <div class="ar-overlay">
     <div class="ar-top-bar">
