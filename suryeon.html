@@ -21,9 +21,7 @@
       <a-asset-item id="harp-model" src="assets/models/harp.glb"></a-asset-item>
     </a-assets>
 
-    <a-camera position="0 0 0" look-controls="enabled: false">
-      <a-cursor fuse="false" raycaster="objects: [gltf-model]"></a-cursor>
-    </a-camera>
+    <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
 
     <a-entity mindar-image-target="targetIndex: 0">
       <a-gltf-model
@@ -53,7 +51,7 @@
 
   </a-scene>
 
-  <div class="ar-overlay" id="overlay">
+  <div class="ar-overlay">
     <div class="ar-top-bar">
       <a href="index.html" class="back-btn">←</a>
       <div class="collect-status">
@@ -61,6 +59,10 @@
         <span class="collect-dot" id="dot-flute">○</span>
       </div>
     </div>
+
+    <button class="collect-trigger" id="collectBtn" onclick="collectInstrument()">
+      ✦ 터치하여 수집
+    </button>
 
     <div class="artwork-info">
       <p class="artwork-tag">Claude Monet · 1906</p>
@@ -91,25 +93,27 @@
       document.getElementById('dot-flute').textContent = '●';
       document.getElementById('dot-flute').style.color = '#f8e8c8';
     }
- 
-    const harp = document.getElementById('harp');
-    const particles = document.getElementById('particles');
-    const popup = document.getElementById('collectPopup');
 
-    document.addEventListener('touchstart', () => {
+    // 이미 수집했으면 버튼 숨기기
+    if (collected.harp) {
+      document.getElementById('collectBtn').style.display = 'none';
+    }
+
+    function collectInstrument() {
       if (collected.harp) return;
-      particles.setAttribute('visible', 'true');
+      document.getElementById('particles').setAttribute('visible', 'true');
       collected.harp = true;
       localStorage.setItem('collected', JSON.stringify(collected));
       document.getElementById('dot-harp').textContent = '●';
       document.getElementById('dot-harp').style.color = '#a8d8ea';
+      document.getElementById('collectBtn').style.display = 'none';
       const audio = new Audio('assets/audio/harp.mp3');
       audio.volume = 0.8;
       audio.play();
       setTimeout(() => {
-        popup.classList.add('show');
+        document.getElementById('collectPopup').classList.add('show');
       }, 800);
-    });
+    }
   </script>
 
 </body>
