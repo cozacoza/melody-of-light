@@ -6,7 +6,36 @@
   <title>양산을 쓴 여인 - 빛의 선율</title>
   <link rel="stylesheet" href="css/style.css">
   <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.2/dist/mindar-image-aframe.prod.js"></script>
+ <script>
+  const collected = JSON.parse(localStorage.getItem('collected') || '{}');
+  if (collected.harp) {
+    document.getElementById('dot-harp').textContent = '●';
+    document.getElementById('dot-harp').style.color = '#a8d8ea';
+  }
+  if (collected.flute) {
+    document.getElementById('dot-flute').textContent = '●';
+    document.getElementById('dot-flute').style.color = '#f8e8c8';
+  }
+
+  const flute = document.getElementById('flute');
+  const particles = document.getElementById('particles');
+  const popup = document.getElementById('collectPopup');
+
+  flute.addEventListener('touchstart', () => {
+    if (collected.flute) return;
+    particles.setAttribute('visible', 'true');
+    collected.flute = true;
+    localStorage.setItem('collected', JSON.stringify(collected));
+    document.getElementById('dot-flute').textContent = '●';
+    document.getElementById('dot-flute').style.color = '#f8e8c8';
+    const audio = new Audio('assets/audio/flute.mp3');
+    audio.volume = 0.8;
+    audio.play();
+    setTimeout(() => {
+      popup.classList.add('show');
+    }, 800);
+  });
+</script>
 </head>
 <body class="ar-page">
 
@@ -28,7 +57,7 @@
     raycaster="objects: [gltf-model]">
   </a-cursor>
 </a-camera>
-ss
+sss
     <a-entity mindar-image-target="targetIndex: 0">
       <!-- 3D 플루트 -->
       <a-gltf-model
