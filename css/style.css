@@ -592,7 +592,23 @@ body {
 
 .collect-trigger {
   position: absolute;
-  bottom: 160px;
+ .collect-trigger {
+  position: fixed;
+  bottom: 100px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(100, 150, 220, 0.2);
+  border: 1px solid rgba(100, 150, 220, 0.5);
+  color: #c8d8f0;
+  padding: 14px 32px;
+  border-radius: 30px;
+  font-size: 14px;
+  font-family: 'Noto Sans KR', sans-serif;
+  cursor: pointer;
+  pointer-events: all;
+  z-index: 9999;
+  animation: pulse 2s infinite;
+}
   left: 50%;
   transform: translateX(-50%);
   background: rgba(100, 150, 220, 0.2);
