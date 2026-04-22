@@ -30,7 +30,7 @@
         id="harp"
         src="#harp-model"
         position="0 0 0.1"
-        scale="0.5 0.5 0.5"
+        scale="1.5 1.5 1.5"
         rotation="0 0 0"
         animation="property: rotation; to: 0 360 0; loop: true; dur: 8000; easing: linear">
       </a-gltf-model>
@@ -91,12 +91,12 @@
       document.getElementById('dot-flute').textContent = '●';
       document.getElementById('dot-flute').style.color = '#f8e8c8';
     }
-
+ 
     const harp = document.getElementById('harp');
     const particles = document.getElementById('particles');
     const popup = document.getElementById('collectPopup');
 
-    harp.addEventListener('touchstart', () => {
+    document.addEventListener('touchstart', () => {
       if (collected.harp) return;
       particles.setAttribute('visible', 'true');
       collected.harp = true;
