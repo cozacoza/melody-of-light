@@ -68,7 +68,7 @@
         <p class="popup-title">플루트를 수집했습니다!</p>
         <p class="popup-desc">바람에 흩날리는 빛이<br>플루트의 숨결로 깨어났습니다</p>
         <div class="popup-buttons">
-          <a href="finale.html" class="popup-btn primary">피날레로 →</a>
+          <a href="finale.html" class="popup-btn primary" onclick="playAudio()">피날레로 →</a>
           <a href="index.html" class="popup-btn secondary">메인으로</a>
         </div>
       </div>
@@ -103,11 +103,6 @@
           localStorage.setItem('collected', JSON.stringify(collected));
           document.getElementById('dot-flute').textContent = '●';
           document.getElementById('dot-flute').style.color = '#f8e8c8';
-          try {
-            const audio = new Audio('assets/audio/flute.m4a');
-            audio.volume = 0.8;
-            audio.play();
-          } catch(e) {}
           document.getElementById('collectPopup').classList.add('show');
         }, 3000);
       });
@@ -122,6 +117,12 @@
         }
       });
     });
+
+    function playAudio() {
+      const audio = new Audio('assets/audio/flute.m4a');
+      audio.volume = 0.8;
+      audio.play();
+    }
   </script>
 
 </body>
