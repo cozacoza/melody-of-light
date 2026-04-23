@@ -33,14 +33,34 @@
         animation="property: rotation; to: 0 360 0; loop: true; dur: 8000; easing: linear">
       </a-gltf-model>
 
+      <!-- 반짝이는 파티클 -->
       <a-entity id="particles" position="0 0 0.1" visible="false">
-        <a-sphere position="0 0.3 0" scale="0.02 0.02 0.02"
-          color="#f8e8c8" opacity="0.8"
-          animation="property: position; to: 0.2 0.6 0; dur: 1500; loop: true; easing: easeOutQuad">
+        <a-sphere position="0 0.4 0" scale="0.025 0.025 0.025" color="#f8e8c8" opacity="0.9"
+          animation__pos="property: position; to: 0 0.8 0; dur: 1200; loop: true; dir: alternate; easing: easeInOutSine"
+          animation__scale="property: scale; to: 0.01 0.01 0.01; dur: 1200; loop: true; dir: alternate;">
         </a-sphere>
-        <a-sphere position="-0.2 0.1 0" scale="0.015 0.015 0.015"
-          color="#fdf0d8" opacity="0.6"
-          animation="property: position; to: -0.3 0.5 0; dur: 2000; loop: true; easing: easeOutQuad">
+        <a-sphere position="0.4 0 0" scale="0.02 0.02 0.02" color="#fdf0d8" opacity="0.8"
+          animation__pos="property: position; to: 0.7 0.3 0; dur: 1500; loop: true; dir: alternate; easing: easeInOutSine"
+          animation__scale="property: scale; to: 0.008 0.008 0.008; dur: 1500; loop: true; dir: alternate;">
+        </a-sphere>
+        <a-sphere position="-0.4 0 0" scale="0.02 0.02 0.02" color="#fff8e8" opacity="0.8"
+          animation__pos="property: position; to: -0.7 0.3 0; dur: 1800; loop: true; dir: alternate; easing: easeInOutSine"
+          animation__scale="property: scale; to: 0.008 0.008 0.008; dur: 1800; loop: true; dir: alternate;">
+        </a-sphere>
+        <a-sphere position="0.3 0.3 0" scale="0.015 0.015 0.015" color="#ffffff" opacity="0.7"
+          animation__pos="property: position; to: 0.5 0.7 0; dur: 1000; loop: true; dir: alternate; easing: easeInOutSine">
+        </a-sphere>
+        <a-sphere position="-0.3 0.3 0" scale="0.015 0.015 0.015" color="#f8e8c8" opacity="0.7"
+          animation__pos="property: position; to: -0.5 0.7 0; dur: 1300; loop: true; dir: alternate; easing: easeInOutSine">
+        </a-sphere>
+        <a-sphere position="0 -0.3 0" scale="0.018 0.018 0.018" color="#fdf0d8" opacity="0.6"
+          animation__pos="property: position; to: 0.2 -0.6 0; dur: 1600; loop: true; dir: alternate; easing: easeInOutSine">
+        </a-sphere>
+        <a-sphere position="0.2 -0.2 0" scale="0.012 0.012 0.012" color="#ffffff" opacity="0.5"
+          animation__pos="property: position; to: 0.4 -0.5 0; dur: 1100; loop: true; dir: alternate; easing: easeInOutSine">
+        </a-sphere>
+        <a-sphere position="-0.2 -0.2 0" scale="0.012 0.012 0.012" color="#fff8e8" opacity="0.5"
+          animation__pos="property: position; to: -0.4 -0.5 0; dur: 1400; loop: true; dir: alternate; easing: easeInOutSine">
         </a-sphere>
       </a-entity>
     </a-entity>
@@ -96,9 +116,9 @@
       target.addEventListener('targetFound', () => {
         if (triggered) return;
         document.getElementById('hint').textContent = '플루트가 깨어나고 있습니다...';
+        document.getElementById('particles').setAttribute('visible', 'true');
         timer = setTimeout(() => {
           triggered = true;
-          document.getElementById('particles').setAttribute('visible', 'true');
           collected.flute = true;
           localStorage.setItem('collected', JSON.stringify(collected));
           document.getElementById('dot-flute').textContent = '●';
@@ -111,9 +131,10 @@
         if (timer) {
           clearTimeout(timer);
           timer = null;
-          if (!triggered) {
-            document.getElementById('hint').textContent = '그림에 카메라를 갖다대세요';
-          }
+        }
+        if (!triggered) {
+          document.getElementById('particles').setAttribute('visible', 'false');
+          document.getElementById('hint').textContent = '그림에 카메라를 갖다대세요';
         }
       });
     });
