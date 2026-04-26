@@ -22,12 +22,12 @@
     <div class="collection-board">
       <p class="board-label">✦ 악기 수집 현황 ✦</p>
       <div class="instruments">
-        <div class="instrument-slot empty">
+        <div class="instrument-slot empty" id="slot-harp">
           <div class="slot-icon">𝄞</div>
           <p class="slot-name">하프</p>
           <p class="slot-work">수련</p>
         </div>
-        <div class="instrument-slot empty">
+        <div class="instrument-slot empty" id="slot-flute">
           <div class="slot-icon">𝄞</div>
           <p class="slot-name">플루트</p>
           <p class="slot-work">양산을 쓴 여인</p>
@@ -35,38 +35,99 @@
       </div>
     </div>
 
-    <!-- 안내 -->
+    <!-- 체험 방법 -->
     <div class="guide">
       <p class="guide-title">✦ 체험 방법 ✦</p>
       <div class="guide-steps">
         <div class="guide-step">
           <span class="step-num">1</span>
-          <span class="step-text">전시장 작품 앞 QR코드를 스캔하세요</span>
+          <span class="step-text">아래 작품 설명을 읽고 AR 체험 버튼을 누르세요</span>
         </div>
         <div class="guide-step">
           <span class="step-num">2</span>
-          <span class="step-text">화면에 나타난 악기를 터치해 수집하세요</span>
+          <span class="step-text">전시장 작품 앞에서 카메라를 갖다대세요</span>
         </div>
         <div class="guide-step">
           <span class="step-num">3</span>
-          <span class="step-text">모든 악기를 모아 오케스트라를 완성하세요</span>
+          <span class="step-text">악기가 나타나면 3초간 인식시켜 수집하세요</span>
         </div>
       </div>
     </div>
 
-    <!-- 작품 바로가기 -->
-    <div class="artwork-links">
-      <a href="suryeon.html" class="artwork-btn">
-        <span class="btn-icon">🎵</span>
-        <span class="btn-text">수련으로 이동</span>
-      </a>
-      <a href="yangsan.html" class="artwork-btn">
-        <span class="btn-icon">🎵</span>
-        <span class="btn-text">양산을 쓴 여인으로 이동</span>
-      </a>
+    <!-- 작품 1: 수련 -->
+    <div class="artwork-card">
+      <div class="artwork-number">01</div>
+      <img src="assets/images/suryeon.jpg" alt="수련" class="artwork-image">
+      <div class="artwork-content">
+        <p class="artwork-year">Claude Monet · 1906</p>
+        <h2 class="artwork-name">수련</h2>
+        <p class="artwork-name-en">Water Lilies</p>
+        <p class="artwork-desc">
+          모네가 말년에 지베르니 정원의 연못을 그린 연작 중 하나. 수면 위에 반사되는 빛과 수련의 모습을 포착하여 경계 없는 물의 세계를 표현함. 구체적인 형태보다 빛과 색채의 순간적인 인상을 담아낸 인상주의의 정수.
+        </p>
+        <div class="artwork-instrument">
+          <div class="instrument-badge">
+            <span class="badge-icon">𝄞</span>
+            <div>
+              <p class="badge-name">하프</p>
+              <p class="badge-reason">잔잔한 수면과 빛의 반사를 아르페지오의 물결로 표현</p>
+            </div>
+          </div>
+        </div>
+        <a href="suryeon.html" class="artwork-btn">
+          수련 AR 체험하기 →
+        </a>
+      </div>
+    </div>
+
+    <!-- 작품 2: 양산을 쓴 여인 -->
+    <div class="artwork-card">
+      <div class="artwork-number">02</div>
+      <img src="assets/images/yangsan.jpg" alt="양산을 쓴 여인" class="artwork-image">
+      <div class="artwork-content">
+        <p class="artwork-year">Claude Monet · 1875</p>
+        <h2 class="artwork-name">양산을 쓴 여인</h2>
+        <p class="artwork-name-en">Woman with a Parasol</p>
+        <p class="artwork-desc">
+          모네의 아내 카미유와 아들 장을 모델로 한 작품. 바람에 나부끼는 옷자락과 구름, 햇빛의 찰나를 생동감 있게 포착함. 빛과 바람이 만들어내는 순간의 아름다움을 담은 인상주의 걸작.
+        </p>
+        <div class="artwork-instrument">
+          <div class="instrument-badge">
+            <span class="badge-icon">𝄞</span>
+            <div>
+              <p class="badge-name">플루트</p>
+              <p class="badge-reason">바람에 흩날리는 가벼운 햇살을 청명한 플루트 선율로 표현</p>
+            </div>
+          </div>
+        </div>
+        <a href="yangsan.html" class="artwork-btn">
+          양산을 쓴 여인 AR 체험하기 →
+        </a>
+      </div>
+    </div>
+
+    <!-- 피날레 -->
+    <div class="finale-section">
+      <p class="finale-label">✦ 모든 악기를 수집했다면 ✦</p>
+      <p class="finale-desc">하프와 플루트의 선율이 합쳐져<br>드뷔시의 달빛이 완성됩니다</p>
+      <a href="finale.html" class="finale-link">피날레로 이동 →</a>
     </div>
 
   </div>
+
+  <script>
+    const collected = JSON.parse(localStorage.getItem('collected') || '{}');
+    if (collected.harp) {
+      const slot = document.getElementById('slot-harp');
+      slot.classList.remove('empty');
+      slot.classList.add('collected');
+    }
+    if (collected.flute) {
+      const slot = document.getElementById('slot-flute');
+      slot.classList.remove('empty');
+      slot.classList.add('collected');
+    }
+  </script>
 
 </body>
 </html>
