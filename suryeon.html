@@ -33,11 +33,10 @@
         animation="property: rotation; to: 0 360 0; loop: true; dur: 8000; easing: linear">
       </a-gltf-model>
 
-      <!-- 반짝이는 파티클 링 -->
       <a-entity id="particles" position="0 0 0.1" visible="false">
         <a-sphere position="0 0.4 0" scale="0.025 0.025 0.025" color="#a8d8ea" opacity="0.9"
           animation__pos="property: position; to: 0 0.8 0; dur: 1200; loop: true; dir: alternate; easing: easeInOutSine"
-          animation__scale="property: scale; to: 0.01 0.01 0.01; dur: 1200; loop: true; dir: alternate; easing: easeInOutSine">
+          animation__scale="property: scale; to: 0.01 0.01 0.01; dur: 1200; loop: true; dir: alternate;">
         </a-sphere>
         <a-sphere position="0.4 0 0" scale="0.02 0.02 0.02" color="#c8e8f8" opacity="0.8"
           animation__pos="property: position; to: 0.7 0.3 0; dur: 1500; loop: true; dir: alternate; easing: easeInOutSine"
@@ -53,21 +52,22 @@
         <a-sphere position="-0.3 0.3 0" scale="0.015 0.015 0.015" color="#a8d8ea" opacity="0.7"
           animation__pos="property: position; to: -0.5 0.7 0; dur: 1300; loop: true; dir: alternate; easing: easeInOutSine">
         </a-sphere>
-        <a-sphere position="0 -0.3 0" scale="0.018 0.018 0.018" color="#c8e8f8" opacity="0.6"
-          animation__pos="property: position; to: 0.2 -0.6 0; dur: 1600; loop: true; dir: alternate; easing: easeInOutSine">
-        </a-sphere>
-        <a-sphere position="0.2 -0.2 0" scale="0.012 0.012 0.012" color="#ffffff" opacity="0.5"
-          animation__pos="property: position; to: 0.4 -0.5 0; dur: 1100; loop: true; dir: alternate; easing: easeInOutSine">
-        </a-sphere>
-        <a-sphere position="-0.2 -0.2 0" scale="0.012 0.012 0.012" color="#e8f4fd" opacity="0.5"
-          animation__pos="property: position; to: -0.4 -0.5 0; dur: 1400; loop: true; dir: alternate; easing: easeInOutSine">
-        </a-sphere>
       </a-entity>
     </a-entity>
 
   </a-scene>
 
   <div class="ar-overlay">
+
+    <!-- 시작 화면 -->
+    <div class="start-screen" id="startScreen" onclick="startExperience()">
+      <div class="start-inner">
+        <p class="start-subtitle">Claude Monet · 1906</p>
+        <p class="start-title">수련</p>
+        <p class="start-desc">화면을 터치하여 시작하세요</p>
+      </div>
+    </div>
+
     <div class="ar-top-bar">
       <a href="index.html" class="back-btn">←</a>
       <div class="collect-status">
@@ -88,7 +88,7 @@
         <p class="popup-title">하프를 수집했습니다!</p>
         <p class="popup-desc">모네의 수면 위 빛이<br>하프의 선율로 깨어났습니다</p>
         <div class="popup-buttons">
-          <a href="yangsan.html" class="popup-btn primary" onclick="playAudio()">다음 작품으로 →</a>
+          <a href="yangsan.html" class="popup-btn primary">다음 작품으로 →</a>
           <a href="index.html" class="popup-btn secondary">메인으로</a>
         </div>
       </div>
@@ -105,6 +105,16 @@
     if (collected.flute) {
       document.getElementById('dot-flute').textContent = '●';
       document.getElementById('dot-flute').style.color = '#f8e8c8';
+    }
+
+    let bgAudio = null;
+
+    function startExperience() {
+      document.getElementById('startScreen').style.display = 'none';
+      bgAudio = new Audio('assets/audio/harp.mp3');
+      bgAudio.loop = true;
+      bgAudio.volume = 0.6;
+      bgAudio.play();
     }
 
     let timer = null;
@@ -138,12 +148,6 @@
         }
       });
     });
-
-    function playAudio() {
-      const audio = new Audio('assets/audio/harp.mp3');
-      audio.volume = 0.8;
-      audio.play();
-    }
   </script>
 
 </body>
