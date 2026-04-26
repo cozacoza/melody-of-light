@@ -59,7 +59,6 @@
 
   <div class="ar-overlay">
 
-    <!-- 시작 화면 -->
     <div class="start-screen" id="startScreen" onclick="startExperience()">
       <div class="start-inner">
         <p class="start-subtitle">Claude Monet · 1906</p>
@@ -111,7 +110,7 @@
 
     function startExperience() {
       document.getElementById('startScreen').style.display = 'none';
-      bgAudio = new Audio('assets/audio/harp.mp3');
+      bgAudio = new Audio('assets/audio/harp.m4a');
       bgAudio.loop = true;
       bgAudio.volume = 0.6;
       bgAudio.play();
